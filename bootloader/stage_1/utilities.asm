@@ -1,15 +1,10 @@
 [bits 16]
 
-; Define the PRINT macro
-%macro print 1
-    mov si, %1
-    call printf
-%endmacro
 
 ; Prints a string to the screen
 ; Params:
 ;   - ds:si points to string
-printf:
+print16_loop:
     ; save registers we will modify
     push ax
     .loop:

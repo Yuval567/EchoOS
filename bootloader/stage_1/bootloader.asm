@@ -9,10 +9,9 @@ KERNEL_OFFSET equ 0x1000
 ; BIOS sets boot drive in 'dl'; store for later use
 mov [BOOT_DRIVE], dl
 
-
 start:
     ; setup data segments
-    mov ax, 0           ; can't set ds/es directly
+    xor ax, ax
     mov ds, ax
     mov es, ax
     
@@ -24,8 +23,9 @@ start:
     mov si, msg_hello
     call printf
 
+    ; load kernel
     mov bx, KERNEL_OFFSET ; bx -> destination
-    mov dh, 1             ; dh -> num sectors
+    mov dh, 1             ; dh -> num sectors (1 sector)
     mov dl, [BOOT_DRIVE]  ; dl -> disk
     call disk_load
 
@@ -49,7 +49,7 @@ printf:
         jmp .loop
 
     .done:
-        pop bx  
+        pop ax  
         ret
 
 

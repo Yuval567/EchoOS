@@ -29,15 +29,14 @@ start:
     mov dl, [BOOT_DRIVE]  ; dl -> disk
     call disk_load
 
-;
+    jmp $
+
 ; Prints a string to the screen
 ; Params:
 ;   - ds:si points to string
-;
 printf:
     ; save registers we will modify
     push ax
-
     .loop:
         lodsb               ; loads next character from si to al
         or al, al           ; verify if next character is null?
@@ -52,43 +51,33 @@ printf:
         pop ax  
         ret
 
-
+; Load sectors from disk
+; Params:
+;   - es:bx -> buffer
+;   - dh -> num sectors
+;   - dl -> drive
 disk_load:
     pusha
-    push dx
-
     mov ah, 0x02 ; read mode
     mov al, dh   ; read dh number of sectors
-    mov cl, 0x02 ; start from sector 2
-                 ; (as sector 1 is our boot sector)
     mov ch, 0x00 ; cylinder 0
     mov dh, 0x00 ; head 0
-
-    ; dl = drive number is set as input to disk_load
-    ; es:bx = buffer pointer is set as input as well
+    mov cl, 0x02 ; start from sector 2 (as sector 1 is our boot sector)
 
     int 0x13      ; BIOS interrupt
     jc disk_error ; check carry bit for error
 
-    pop dx     ; get back original number of sectors to read
-    cmp al, dh ; BIOS sets 'al' to the # of sectors actually read
-               ; compare it to 'dh' and error out if they are !=
-    jne sectors_error
     popa
     ret
 
 disk_error:
+    popa
     mov si, disk_load_error
-    jmp printf
-
-sectors_error:
-    mov si, disk_load_error
-    jmp printf
+    call printf
+    jmp $
 
 msg_hello: db 'Hello world!', ENDL, 0
-
-disk_load_error: db 'An error occured while loading disk', ENDL, 0
-sectors_load_error: db "Couldn't load dx number of sectors", ENDL, 0
+disk_load_error: db 'An error occurred while loading disk', ENDL, 0
 
 ; boot drive variable
 BOOT_DRIVE db 0

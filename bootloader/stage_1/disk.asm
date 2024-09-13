@@ -28,6 +28,5 @@ disk_load:
 
 disk_error:
     popa
-    mov si, disk_load_error
-    call printf
+    print disk_load_error 
     jmp $

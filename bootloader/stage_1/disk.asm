@@ -1,10 +1,9 @@
-[bits 16]
-
 ; Load sectors from disk
 ; Params:
 ;   - es:bx -> buffer
 ;   - dh -> num sectors
 ;   - dl -> drive
+[bits 16]
 disk_load:
     pusha
     push dx

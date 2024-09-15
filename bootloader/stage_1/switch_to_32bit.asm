@@ -6,7 +6,8 @@ switch_to_32bit:
     or eax, 0x1             ; 3. enable protected mode
     mov cr0, eax
     jmp CODE_SEG:init_32bit ; 4. far jump
-
+    ret
+    
 [bits 32]
 init_32bit:
     mov ax, DATA_SEG        ; 5. update segment registers
@@ -19,4 +20,4 @@ init_32bit:
     mov ebp, 0x90000        ; 6. setup stack
     mov esp, ebp
 
-    call BEGIN_32BIT        ; 7. move back to mbr.asm
+    call start_32

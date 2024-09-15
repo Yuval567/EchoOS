@@ -27,14 +27,25 @@ start:
     mov dh, 1             ; dh -> num sectors (1 sector)
     mov dl, [BOOT_DRIVE]  ; dl -> disk
     call disk_load
-
     print disk_loaded_log
 
+    call clear_screen
+
+    ; print switch_to_32bit_log
+    call switch_to_32bit
+
+[bits 32]
+start_32:
+    mov esi, calling_kernel_log
+    call print32_loop
+    call KERNEL_OFFSET
     jmp $
 
 %include "utilities.asm"
 %include "logs.asm"
 %include "disk.asm"
+%include "gdt.asm"
+%include "switch_to_32bit.asm"
 
 ; boot drive variable
 BOOT_DRIVE db 0

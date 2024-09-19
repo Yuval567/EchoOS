@@ -1,5 +1,10 @@
 ; Define the PRINT macro
-%macro print 1
+%macro print16 1
     mov si, %1
     call print16_loop
+%endmacro
+
+%macro print32 1
+    mov esi, %1
+    call print32_loop
 %endmacro

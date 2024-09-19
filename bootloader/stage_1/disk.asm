@@ -27,5 +27,5 @@ disk_load:
 
 disk_error:
     popa
-    print disk_load_error 
+    print16 disk_load_error 
     jmp $

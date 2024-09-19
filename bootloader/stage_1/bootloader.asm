@@ -20,24 +20,23 @@ start:
     mov sp, 0x7C00      ; stack grows downwards from where we are loaded in memory
 
     ; print hello world message
-    print bootloader_start_log
+    print16 bootloader_start_log
 
     ; load kernel
     mov bx, KERNEL_OFFSET ; bx -> destination
     mov dh, 1             ; dh -> num sectors (1 sector)
     mov dl, [BOOT_DRIVE]  ; dl -> disk
     call disk_load
-    print disk_loaded_log
+    print16 disk_loaded_log
 
-    call clear_screen
+    ; call clear_screen
 
-    ; print switch_to_32bit_log
+    print16 switch_to_32bit_log
     call switch_to_32bit
 
 [bits 32]
 start_32:
-    mov esi, calling_kernel_log
-    call print32_loop
+    print32 calling_kernel_log
     call KERNEL_OFFSET
     jmp $
 

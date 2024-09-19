@@ -2,15 +2,15 @@
 
 ## Bootloading (BIOS)
 - First stage bootloader
-	- [ ] Setup segments
-	- [ ] Load the 2nd stage bootloader using FAT
+	- [x] Setup GDT
+	- [x] Load the 2nd stage bootloader using FAT
 	- [ ] Handoff control to 2nd stage bootloader
 - Second stage bootloader
 	- [ ] Implement printf (for debugging)
 	- [ ] Video mode setup
-	- [ ] Switch to protected mode
+	- [x] Switch to protected mode
 	- [ ] Switch to long mode
-	- [ ] Handoff execution to kernel
+	- [x] Handoff execution to kernel
 
 ## Kernel
 - [ ] Implement video mode driver

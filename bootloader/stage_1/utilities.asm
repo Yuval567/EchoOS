@@ -1,12 +1,5 @@
 video_mem_start equ 0xb8000
 
-[bits 16]
-clear_screen:
-    mov ah, 0x00        ; Set video mode function
-    mov al, 0x03        ; Mode 3: 80x25 text mode
-    int 0x10            ; BIOS interrupt to set mode
-    ret                 ; Return to caller
-
 ; Prints a string to the screen
 ; Params:
 ;   - ds:si points to string

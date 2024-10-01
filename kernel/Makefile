@@ -1,12 +1,17 @@
 ENTRYPOINT=main
+CFLAGS=-m32 -ffreestanding -std=gnu99 -O2 -Wall -Wextra -I$(KERNEL_DIR)/include 
+OBJFILES=$(OBJ_DIR)/kernel.o $(OBJ_DIR)/vga.o $(OBJ_DIR)/ports.o
 
 all: $(KERNEL_BIN)
 
-$(BUILD_DIR)/kernel_entry.o: $(KERNEL_SRC_DIR)/kernel_entry.asm
+$(OBJ_DIR)/%.o: $(KERNEL_DIR)/src/drivers/%.c
+	$(GCC) $(CFLAGS) -c $< -o $@
+
+$(OBJ_DIR)/kernel_entry.o: $(KERNEL_DIR)/kernel_entry.asm
 	$(ASM) $< -f elf -o $@
 
-$(BUILD_DIR)/kernel.o: $(KERNEL_SRC_DIR)/kernel.c
-	$(GCC) -m32 -ffreestanding -std=gnu99 -O2 -Wall -Wextra -c $< -o $@
+$(OBJ_DIR)/kernel.o: $(KERNEL_DIR)/kernel.c $(OBJ_DIR)/vga.o $(OBJ_DIR)/ports.o
+	$(GCC) $(CFLAGS) -c $< -o $@
 
-$(KERNEL_BIN): $(BUILD_DIR)/kernel_entry.o $(BUILD_DIR)/kernel.o
+$(KERNEL_BIN): $(OBJFILES)
 	$(LD) -m elf_i386 -o $(BUILD_DIR)/$@ -Ttext 0x1000 $^ --oformat binary --entry $(ENTRYPOINT)

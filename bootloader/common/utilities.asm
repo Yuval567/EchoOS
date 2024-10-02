@@ -1,4 +1,4 @@
-video_mem_start equ 0xb8000
+VIDEO_MEMORY equ 0xb8000
 
 ; Prints a string to the screen
 ; Params:
@@ -28,7 +28,7 @@ print16_loop:
 print32_loop:
     pusha
 
-    mov ebx, video_mem_start  ; Set EBX to point to the video memory base address
+    mov ebx, VIDEO_MEMORY  ; Set EBX to point to the video memory base address
     mov ecx, 0x07            ; Attribute byte (light gray on black)
 
     .loop:

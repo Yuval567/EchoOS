@@ -1,7 +1,7 @@
+%include "common/macros.asm"
+
 [bits 16]
 [org 0x7c00]
-
-%include "macros.asm"
 
 ; where to load the kernel to
 KERNEL_OFFSET equ 0x1000
@@ -37,11 +37,11 @@ start_32:
     call KERNEL_OFFSET
     jmp $
 
-%include "utilities.asm"
-%include "logs.asm"
-%include "disk.asm"
-%include "gdt.asm"
-%include "switch_to_32bit.asm"
+%include "common/utilities.asm"
+%include "stage_1/logs.asm"
+%include "stage_1/disk.asm"
+%include "stage_2/gdt.asm"
+%include "stage_2/switch_to_32bit.asm"
 
 ; boot drive variable
 BOOT_DRIVE db 0

@@ -20,12 +20,17 @@ disk_load:
     pop dx
     cmp al, dh ; BIOS sets 'al' to the # of sectors actually read
             ; compare it to 'dh' and error out if they are !=
-    jne sectors_load_error
+    jne sectors_error
 
     popa
     ret
 
-disk_error:
-    popa
-    print16 disk_load_error 
-    jmp $
+    disk_error:
+        popa
+        print16 disk_load_error 
+        jmp $
+
+    sectors_error:
+        popa
+        print16 sectors_load_error 
+        jmp $

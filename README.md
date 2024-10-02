@@ -2,11 +2,12 @@
 
 ## Bootloading (BIOS)
 - First stage bootloader
-	- [x] Setup GDT
-	- [x] Load the 2nd stage bootloader using FAT
+	- [x] Setup stack & data segments.
+	- [x] Load the 2nd stage bootloader using disk bios interrupts.
 	- [ ] Handoff control to 2nd stage bootloader
+
 - Second stage bootloader
-	- [ ] Implement printf (for debugging)
+	- [x] Setup GDT
 	- [ ] Video mode setup
 	- [x] Switch to protected mode
 	- [ ] Switch to long mode
@@ -14,7 +15,7 @@
 
 ## Kernel
 - [ ] Implement video mode driver
-- [ ] Implement printf
+- [x] Implement printf
 - [ ] Implement keyboard driver
 - [ ] Basic shell (Without special commands)
 - [ ] etc...

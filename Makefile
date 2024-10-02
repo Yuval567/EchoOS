@@ -9,7 +9,7 @@ export BOOTLOADER_BIN=bootloader.bin
 export BUILD_DIR=$(PWD)/build
 export OBJ_DIR=$(BUILD_DIR)/obj
 export KERNEL_DIR=$(PWD)/kernel
-export BOOTLOADER_DIR=$(PWD)/bootloader/stage_1
+export BOOTLOADER_DIR=$(PWD)/bootloader
 
 # Internal Variables
 OS_FLOPPY=os_floppy.img
@@ -25,8 +25,8 @@ init:
 	mkdir -p $(OBJ_DIR)
 
 bootloader: init
-	$(MAKE) -C $(BOOTLOADER_DIR)
-	echo "Bootloader has been built successfully!"
+	$(MAKE) -C $(BOOTLOADER_DIR)/stage_1
+	echo "Bootloader: Stage 1 has been built successfully!"
 
 kernel: init
 	$(MAKE) -C $(KERNEL_DIR)

@@ -3,8 +3,8 @@
 [bits 16]
 [org 0x7c00]
 
-; where to load the kernel to
-KERNEL_OFFSET equ 0x1000
+; where to load the second stage loader to
+LOADER_OFFSET equ 0x7e00
 
 ; BIOS sets boot drive in 'dl'; store for later use
 mov [BOOT_DRIVE], dl
@@ -19,29 +19,23 @@ start:
     mov ss, ax
     mov sp, 0x7C00      ; stack grows downwards from where we are loaded in memory
 
-    print16 bootloader_start_log
+    print16 stage_1_start
 
-    ; load kernel from disk
-    mov bx, KERNEL_OFFSET ; bx -> destination address
+    ; load loader from disk
+    mov bx, LOADER_OFFSET ; bx -> destination address
+    mov cl, 0x02          ; start from sector 2 (as sector 1 is our boot sector)
     mov dh, 1             ; dh -> num sectors (1 sector)
     mov dl, [BOOT_DRIVE]  ; dl -> disk
     call disk_load
     print16 disk_loaded_log
 
-    print16 switch_to_32bit_log
-    call switch_to_32bit
-
-[bits 32]
-start_32:
-    print32 calling_kernel_log
-    call KERNEL_OFFSET
+    print16 calling_second_stage_log
+    call LOADER_OFFSET
     jmp $
 
 %include "common/utilities.asm"
-%include "stage_1/logs.asm"
+%include "common/logs.asm"
 %include "stage_1/disk.asm"
-%include "stage_2/gdt.asm"
-%include "stage_2/switch_to_32bit.asm"
 
 ; boot drive variable
 BOOT_DRIVE db 0

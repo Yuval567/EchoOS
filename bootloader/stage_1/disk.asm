@@ -2,6 +2,7 @@
 ; Params:
 ;   - es:bx -> buffer
 ;   - dh -> num sectors
+;   - cl -> sector offset
 ;   - dl -> drive
 [bits 16]
 disk_load:
@@ -10,7 +11,6 @@ disk_load:
 
     mov ah, 0x02 ; read mode
     mov al, dh   ; read dh number of sectors
-    mov cl, 0x02 ; start from sector 2 (as sector 1 is our boot sector)
     mov ch, 0x00 ; cylinder 0
     mov dh, 0x00 ; head 0
 

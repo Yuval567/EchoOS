@@ -5,7 +5,7 @@
 ;   - cl -> sector offset
 ;   - dl -> drive
 [bits 16]
-disk_load:
+load_from_disk:
     pusha
     push dx
 

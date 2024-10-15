@@ -26,7 +26,7 @@ start:
     mov cl, 0x02          ; start from sector 2 (as sector 1 is our boot sector)
     mov dh, 1             ; dh -> num sectors (1 sector)
     mov dl, [BOOT_DRIVE]  ; dl -> disk
-    call disk_load
+    call load_from_disk
     print16 disk_loaded_log
 
     print16 calling_second_stage_log

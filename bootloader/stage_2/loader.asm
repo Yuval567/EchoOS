@@ -30,7 +30,7 @@ start:
     mov cl, (1 + NUM_SECTORS) + 1 ; start from sector 4 (as sector our bootloader is 3 sectors long)
     mov dh, 1                     ; dh -> num sectors (1 sector)
     mov dl, [BOOT_DRIVE]          ; dl -> disk
-    call disk_load
+    call load_from_disk
     print16 disk_loaded_log
     
     print16 switch_to_32bit_log

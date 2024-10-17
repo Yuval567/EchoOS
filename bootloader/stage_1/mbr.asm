@@ -24,7 +24,7 @@ start:
     ; load loader from disk
     mov bx, LOADER_OFFSET ; bx -> destination address
     mov cl, 0x02          ; start from sector 2 (as sector 1 is our boot sector)
-    mov dh, 1             ; dh -> num sectors (1 sector)
+    mov dh, 0x02          ; dh -> num sectors (2 sector)
     mov dl, [BOOT_DRIVE]  ; dl -> disk
     call load_from_disk
     print16 disk_loaded_log

@@ -26,7 +26,7 @@ update_32bit_stack:
     mov ebp, 0x9000        ; 6. setup stack
     mov esp, ebp
 
-    ; call start_32
+    call start_32
 
 [bits 16]
 switch_to_unreal_mode:

@@ -28,9 +28,9 @@ load_from_disk:
     disk_error:
         popa
         print16 disk_load_error 
-        jmp $
+        stop
 
     sectors_error:
         popa
         print16 sectors_load_error 
-        jmp $
+        halt

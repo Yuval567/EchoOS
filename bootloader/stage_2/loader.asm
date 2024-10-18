@@ -1,13 +1,19 @@
 %include "common/macros.asm"
 
+SECTOR_SIZE equ 512
+BUFFER_ADDRESS equ 0x500
+
+; Number of loader sectors
+NUM_SECTORS equ 2 
+
+; Number of kernel sectors
+KERNEL_SECTORS equ 15
+
+; The start address of the kernel
+KERNEL_START_ADDRESS equ 0x100400
+
 [bits 16]
 [org 0x7e00]
-
-; Number of sectors
-NUM_SECTORS equ 2 
-SECTOR_SIZE equ 512
-
-KERNEL_START_ADDRESS equ 0x100000
 
 ; BIOS sets boot drive in 'dl'; store for later use
 mov [BOOT_DRIVE], dl
@@ -26,24 +32,30 @@ start:
     print16 stage_2_start
     
     call enable_A20
+    print16 a20_gate_enabled_log
     call switch_to_unreal_mode
 
 [bits 16]
 unreal_entry:
+    print16 unreal_mode_entry_log
     call load_kernel_to_memory
+    print16 kernel_loaded_log
+    
+    print16 switch_to_32bit_log
     call switch_to_32bit
 
 
 [bits 32]
-start_32:
+start_32bit:
+    print32 calling_kernel_log
     call KERNEL_START_ADDRESS
     stop
 
 %include "common/logs.asm"
 %include "common/utilities.asm"
-%include "stage_1/disk.asm"
+%include "common/disk.asm"
 %include "stage_2/gdt.asm"
-%include "stage_2/switch_to_32bit.asm"
+%include "stage_2/mode_switching.asm"
 %include "stage_2/kernel_loading.asm"
 
 

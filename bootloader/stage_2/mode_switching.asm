@@ -9,8 +9,8 @@ enable_A20:
 enter_protected_mode:
     cli
     mov eax, cr0
-    or eax, 0x1              ; 3. enable protected mode
-    mov cr0, eax
+    or eax, 0x1              
+    mov cr0, eax ; enable protected mode
     ret
 
 [bits 16]
@@ -23,10 +23,11 @@ switch_to_32bit:
 update_32bit_stack:
     mov ax, DATA_SEG
     mov ss, ax
-    mov ebp, 0x9000        ; 6. setup stack
+
+    mov ebp, KERNEL_START_ADDRESS        ; 6. setup stack
     mov esp, ebp
 
-    call start_32
+    call start_32bit
 
 [bits 16]
 switch_to_unreal_mode:

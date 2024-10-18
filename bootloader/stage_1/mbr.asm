@@ -31,11 +31,11 @@ start:
 
     print16 calling_second_stage_log
     call LOADER_OFFSET
-    jmp $
+    stop
 
 %include "common/utilities.asm"
 %include "common/logs.asm"
-%include "stage_1/disk.asm"
+%include "common/disk.asm"
 
 ; boot drive variable
 BOOT_DRIVE db 0

@@ -15,10 +15,6 @@ start:
     mov ds, ax
     mov es, ax
     
-    ; setup stack
-    mov ss, ax
-    mov sp, 0x7C00      ; stack grows downwards from where we are loaded in memory
-
     print16 stage_1_start
 
     ; load loader from disk

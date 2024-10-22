@@ -63,5 +63,5 @@ start_32bit:
 BOOT_DRIVE db 0
 
 ; padding the program to one sector
-TOTAL_SIZE equ SECTOR_SIZE * NUM_SECTORS  
+TOTAL_SIZE equ SECTOR_SIZE * NUM_SECTORS
 times TOTAL_SIZE - ($-$$) db 0

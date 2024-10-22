@@ -10,7 +10,7 @@ enter_protected_mode:
     cli
     mov eax, cr0
     or eax, 0x1              
-    mov cr0, eax ; enable protected mode
+    mov cr0, eax              ; enable protected mode
     ret
 
 [bits 16]
@@ -24,7 +24,7 @@ update_32bit_stack:
     mov ax, DATA_SEG
     mov ss, ax
 
-    mov ebp, KERNEL_START_ADDRESS        ; 6. setup stack
+    mov ebp, KERNEL_START_ADDRESS   ; setup stack
     mov esp, ebp
 
     call start_32bit
@@ -33,13 +33,13 @@ update_32bit_stack:
 switch_to_unreal_mode:
     cli
     push ds
-    lgdt [gdt_descriptor]   ; 2. load GDT descriptor
+    lgdt [gdt_descriptor]       ; load GDT descriptor
 
     call enter_protected_mode
 
-    jmp $+2                ; Clear the instruction pre-fetch queue
+    jmp $+2                     ; clear the instruction pre-fetch queue
 
-    mov ax, DATA_SEG        ; 5. update segment registers
+    mov ax, DATA_SEG            ; update segment registers
     mov ds, ax
     mov es, ax
     mov fs, ax

@@ -1,36 +1,45 @@
-; Load sectors from disk
-; Params:
-;   - es:bx -> buffer
-;   - dh -> num sectors
-;   - cl -> sector offset
-;   - dl -> drive
+; Reads a specified number of sectors from the boot drive 
+; into memory using BIOS interrupt 0x13.
+;
+; Parameters:
+;   - es:bx -> Destination memory address
+;   - dh -> Number of sectors to read
+;   - cl -> Starting sector number
+;   - dl -> Boot drive number
+;
+; Returns:
+;   - On success: Returns with no error.
+;   - On failure: Prints an error message and halts the system.
 [bits 16]
 load_from_disk:
     pusha
-    push dx
 
-    mov ah, 0x02 ; read mode
-    mov al, dh   ; read dh number of sectors
-    mov ch, 0x00 ; cylinder 0
-    mov dh, 0x00 ; head 0
+    push dx             ; save dx as we use dh and dl
 
-    int 0x13      ; BIOS interrupt
-    jc disk_error ; check carry bit for error
+    mov ah, 0x02        ; read mode
+    mov al, dh          ; read dh number of sectors
+    mov ch, 0x00        ; cylinder 0
+    mov dh, 0x00        ; head 0
 
-    pop dx
-    cmp al, dh ; BIOS sets 'al' to the # of sectors actually read
-            ; compare it to 'dh' and error out if they are !=
-    jne sectors_error
+    int 0x13            ; BIOS interrupt
+    jc load_disk_error  ; check carry bit for read error
+
+    pop dx              ; restore dx
+
+    ; BIOS sets 'al' to the number of sectors actually read
+    cmp al, dh
+    ; Compare it to 'dh' and error out if they are not equal
+    jne insufficient_sectors
 
     popa
     ret
 
-    disk_error:
+    load_disk_error:
         popa
         print16 disk_load_error 
         stop
 
-    sectors_error:
+    insufficient_sectors:
         popa
         print16 sectors_load_error 
-        halt
+        stop

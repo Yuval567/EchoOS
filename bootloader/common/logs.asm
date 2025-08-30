@@ -13,7 +13,9 @@ unreal_mode_entry_log: db "Switched to unreal mode.", ENDL, 0
 kernel_loaded_log: db "Kernel loaded successfully to memory.", ENDL, 0
 
 disk_loaded_log: db 'Disk Loaded.', ENDL, 0
+
 disk_load_error: db 'An error occurred while loading disk.', ENDL, 0
-sectors_load_error: db "Couldn't load dx number of sectors.", ENDL, 0
+sectors_load_error: db "Couldn't load dh number of sectors.", ENDL, 0
+stage_2_fail_error: db "Second stage call failed or crashed.", ENDL, 0
 
 debug_log: db "TEST", ENDL, 0

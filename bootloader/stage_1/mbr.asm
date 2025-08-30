@@ -1,32 +1,34 @@
 %include "common/macros.asm"
+%include "common/constants.asm"
 
 [bits 16]
 [org 0x7c00]
-
-; where to load the second stage loader to
-LOADER_OFFSET equ 0x7e00
-
-; BIOS sets boot drive in 'dl'; store for later use
-mov [BOOT_DRIVE], dl
-
 start:
-    ; setup data segments
+    ; BIOS sets boot drive in 'dl'; store for later use
+    mov [BOOT_DRIVE], dl
+
+    ; initialize data segments
     xor ax, ax
     mov ds, ax
     mov es, ax
     
     print16 stage_1_start
 
-    ; load loader from disk
-    mov bx, LOADER_OFFSET ; bx -> destination address
-    mov cl, 0x02          ; start from sector 2 (as sector 1 is our boot sector)
-    mov dh, 0x02          ; dh -> num sectors (2 sector)
-    mov dl, [BOOT_DRIVE]  ; dl -> disk
+    ; load second stage bootloader from disk
+    mov bx, LOADER_ADDR   
+    mov cl, LOADER_START_SECTOR
+    mov dh, LOADER_NUM_SECTORS
+    mov dl, [BOOT_DRIVE]
     call load_from_disk
+    
     print16 disk_loaded_log
 
+    ; jump to second stage bootloader
     print16 calling_second_stage_log
-    call LOADER_OFFSET
+    call LOADER_ADDR
+
+    ; if we return here, hang the system
+    print16 stage_2_fail_error
     stop
 
 %include "common/utilities.asm"

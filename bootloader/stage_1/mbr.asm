@@ -47,8 +47,8 @@ start:
 
 %include "common/utilities.asm"
 %include "common/logs.asm"
-%include "stage_1/logs.asm"
 %include "common/disk.asm"
+%include "stage_1/logs.asm"
 
 ; boot drive variable
 BOOT_DRIVE db 0

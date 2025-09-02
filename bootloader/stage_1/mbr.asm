@@ -15,7 +15,7 @@ start:
     print16 stage_1_start
 
     ; load second stage bootloader from disk
-    mov bx, LOADER_ADDR   
+    mov bx, LOADER_ADDRESS   
     mov cl, LOADER_START_SECTOR
     mov dh, LOADER_NUM_SECTORS
     mov dl, [BOOT_DRIVE]
@@ -25,7 +25,7 @@ start:
 
     ; jump to second stage bootloader
     print16 calling_second_stage_log
-    call LOADER_ADDR
+    call LOADER_ADDRESS
 
     ; if we return here, hang the system
     print16 stage_2_fail_error

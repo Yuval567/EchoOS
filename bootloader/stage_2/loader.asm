@@ -1,30 +1,18 @@
 %include "common/macros.asm"
-
-SECTOR_SIZE equ 512
-BUFFER_ADDRESS equ 0x500
-
-; Number of loader sectors
-NUM_SECTORS equ 2 
-
-; Number of kernel sectors
-KERNEL_SECTORS equ 15
-
-; The start address of the kernel
-KERNEL_START_ADDRESS equ 0x100400
+%include "common/constants.asm"
 
 [bits 16]
-[org 0x7e00]
-
-; BIOS sets boot drive in 'dl'; store for later use
-mov [BOOT_DRIVE], dl
-
+[org LOADER_ADDRESS]
 start:
-    ; setup stack
+    ; BIOS sets boot drive in 'dl'; store for later use
+    mov [BOOT_DRIVE], dl
+
+    ; initialize stack
     mov ax, 0x9F00    ; Load segment 0x9F00
     mov ss, ax        ; Set the stack segment to 0x9F00
     mov sp, 0x0C00    ; Set stack pointer to 0xC00
 
-    ; setup data segments
+    ; initialize data segments
     xor ax, ax
     mov ds, ax
     mov es, ax
@@ -33,6 +21,7 @@ start:
     
     call enable_A20
     print16 a20_gate_enabled_log
+    
     call switch_to_unreal_mode
 
 [bits 16]
@@ -63,5 +52,5 @@ start_32bit:
 BOOT_DRIVE db 0
 
 ; padding the program to one sector
-TOTAL_SIZE equ SECTOR_SIZE * NUM_SECTORS
+TOTAL_SIZE equ SECTOR_SIZE_BYTES * LOADER_NUM_SECTORS
 times TOTAL_SIZE - ($-$$) db 0

@@ -4,12 +4,12 @@
 [bits 16]
 load_kernel_to_memory:
     mov edi, KERNEL_START_ADDRESS ; Initial destination address (kernel address)
-    mov cx, KERNEL_SECTORS
+    mov cx, KERNEL_NUM_SECTORS
   
     .loop:
         call load_kernel_buffer
         push cx
-        mov cx, SECTOR_SIZE
+        mov cx, SECTOR_SIZE_BYTES
         mov si, BUFFER_ADDRESS
         call copy_buffer
         pop cx
@@ -69,5 +69,5 @@ copy_buffer:
     loop copy_buffer
     ret                    ; Return from the procedure
 
-START_SECTOR db (1 + NUM_SECTORS) + 1
+START_SECTOR db (1 + LOADER_NUM_SECTORS) + 1
 

@@ -36,10 +36,10 @@ load_from_disk:
 
     load_disk_error:
         popa
-        print16 disk_load_error 
+        print16 err_disk_load 
         stop
 
     insufficient_sectors:
         popa
-        print16 sectors_load_error 
+        print16 err_sector_count 
         stop

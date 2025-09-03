@@ -1,7 +1,9 @@
+; -------------------------------------------------------------------
 ; Enables the A20 address line, allowing access to memory above 1MB.
 ; Enables the A20 line via port 0x92 (System Control Port A)
 ; Parameters: None
 ; Returns: None
+; -------------------------------------------------------------------
 [bits 16]
 enable_A20_gate:
     push ax
@@ -13,18 +15,22 @@ enable_A20_gate:
     pop ax
     ret  
 
+; ------------------------------------------------------------
 ; Loads the GDT descriptor into the GDTR register.
 ; Parameters: gdt_descriptor - pointer to the GDT descriptor
 ; Returns: None
+; ------------------------------------------------------------
 [bits 16]
 load_gdt_descriptor:
     lgdt [gdt_descriptor]
     ret
 
+; -----------------------------------------------------------------
 ; Enables protected mode by setting the PE bit in the CR0 register.
 ; Cancels interrupts to ensure a safe transition.
 ; Parameters: None
 ; Returns: None
+; -----------------------------------------------------------------
 [bits 16]
 enable_protected_mode:
     push eax
@@ -37,11 +43,13 @@ enable_protected_mode:
     pop eax
     ret
 
+; -------------------------------------------------------------------------------
 ; Switches the CPU to protected mode and jumps to the protected_mode_entry label.
 ; This function assumes that the GDT has already been loaded and that the
 ; segment selectors are set up correctly.
 ; Parameters: None
 ; Returns: None
+; -------------------------------------------------------------------------------
 [bits 16]
 switch_to_protected_mode:
     call enable_protected_mode

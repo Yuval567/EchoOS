@@ -1,7 +1,9 @@
+; --------------------------------------------------------------------------------------------------------
 ; Transitions the CPU from real mode to "unreal mode," allowing access to all memory (up to 4GB) 
 ; while remaining in real mode by temporarily enabling protected mode and loading 32-bit segment limits.
 ; Parameters: None
 ; Calls: enable_protected_mode
+; --------------------------------------------------------------------------------------------------------
 [bits 16]
 switch_to_unreal_mode:
     push ds                     ; save DS   

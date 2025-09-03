@@ -1,6 +1,7 @@
 %include "common/macros.asm"
 %include "common/constants.asm"
 
+; -------------------------------------------------------------------------
 ; Main entry point for the stage 1 bootloader (MBR).
 ; Loads the second stage bootloader from disk and transfers control to it.
 ;
@@ -15,6 +16,7 @@
 ; Returns:
 ;   - Does not return on success (jumps to stage 2 loader).
 ;   - If stage 2 fails, prints error and halts.
+; -------------------------------------------------------------------------
 [bits 16]
 [org 0x7c00]
 start:

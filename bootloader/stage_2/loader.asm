@@ -1,6 +1,7 @@
 %include "common/macros.asm"
 %include "common/constants.asm"
 
+; -----------------------------------------------------------------------------
 ; Main entry point for the stage 2 bootloader.
 ; Initializes stack and data segments, enables A20, loads the GDT, switches to
 ; unreal mode, and begins loading the kernel.
@@ -16,6 +17,7 @@
 ;   - DL: Boot drive number (set by BIOS)
 ; Returns:
 ;   - Does not return on success (transfers control to kernel).
+; -----------------------------------------------------------------------------
 [bits 16]
 [org LOADER_ADDRESS]
 start:
@@ -42,7 +44,7 @@ start:
 
     call switch_to_unreal_mode
 
-
+; ------------------------------------------------------------------------
 ; Entry point after switching to unreal mode.
 ; Loads the kernel from disk into memory and prepares for protected mode.
 ;
@@ -52,6 +54,7 @@ start:
 ;
 ; Parameters: None
 ; Returns: None
+; ------------------------------------------------------------------------
 [bits 16]
 unreal_mode_entry:
     print16 log_unreal_mode_entry
@@ -60,7 +63,7 @@ unreal_mode_entry:
 
     call switch_to_protected_mode
 
-
+; ---------------------------------------------------------------------------
 ; Entry point after switching to protected mode (32-bit).
 ; Sets up segment registers and stack, then transfers control to the kernel.
 ;
@@ -72,6 +75,7 @@ unreal_mode_entry:
 ;
 ; Parameters: None
 ; Returns: None
+; ---------------------------------------------------------------------------
 [bits 32]
 protected_mode_entry:
     ; Set up segment registers for protected mode
@@ -103,7 +107,6 @@ protected_mode_entry:
 %include "stage_2/protected_mode.asm"
 %include "stage_2/unreal_mode.asm"
 %include "stage_2/load_kernel.asm"
-
 
 ; boot drive variable
 BOOT_DRIVE db 0

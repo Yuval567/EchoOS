@@ -1,3 +1,4 @@
+; -------------------------------------------------------------
 ; Reads a specified number of sectors from the boot drive 
 ; into memory using BIOS interrupt 0x13.
 ;
@@ -10,6 +11,7 @@
 ; Returns:
 ;   - On success: Returns with no error.
 ;   - On failure: Prints an error message and halts the system.
+; -------------------------------------------------------------
 [bits 16]
 load_from_disk:
     pusha

@@ -1,3 +1,4 @@
+; -------------------------------------------------------------------------
 ; Loads the kernel from disk into high memory, sector by sector.
 ; For each sector:
 ;   - Loads the sector into a buffer using BIOS routines.
@@ -5,6 +6,7 @@
 ;   - Increments the sector number and destination address.
 ; Parameters: None
 ; Returns: None
+; -------------------------------------------------------------------------
 [bits 16]
 load_kernel_to_memory:
     mov edi, KERNEL_START_ADDRESS ; Initial destination address (kernel address)
@@ -31,10 +33,12 @@ load_kernel_to_memory:
 
     ret
 
+; ---------------------------------------------------------------------------
 ; Loads one kernel sector from disk into BUFFER_ADDRESS using BIOS routines.
 ; Temporarily resets DS and ES for BIOS compatibility.
 ; Parameters: None
 ; Returns: None
+; ---------------------------------------------------------------------------
 [bits 16]
 load_kernel_sector:
     pusha
@@ -61,7 +65,7 @@ load_kernel_sector:
 
     ret
 
-
+; -----------------------------------------------------------------------------------
 ; Copies a buffer from a source address in low memory to a destination address
 ; in high memory.
 ; Parameters:
@@ -70,6 +74,7 @@ load_kernel_sector:
 ;   - cx: Size of the buffer (number of bytes to copy)
 ; Returns: None
 ; Notes: This procedure modifies si and edi; their initial values are not preserved.
+; -----------------------------------------------------------------------------------
 [bits 16]
 copy_buffer:
     ; Load byte from source (buffer at [si]) and store in destination ([es:edi])
@@ -87,4 +92,3 @@ copy_buffer:
 ; Variable holding the current sector number to load.
 ; Initialized to the first kernel sector after the bootloader.
 START_SECTOR db (1 + LOADER_NUM_SECTORS) + 1
-

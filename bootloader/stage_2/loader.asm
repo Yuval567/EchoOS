@@ -103,7 +103,7 @@ protected_mode_entry:
 %include "common/utilities.asm"
 %include "common/disk.asm"
 %include "stage_2/logs.asm"
-%include "stage_2/gdt.asm"
+%include "stage_2/32bit_gdt.asm"
 %include "stage_2/protected_mode.asm"
 %include "stage_2/unreal_mode.asm"
 %include "stage_2/load_kernel.asm"

@@ -3,8 +3,8 @@
 ; 
 ; Parameters:
 ;   AX - Starting LBA (Logical Block Address)
-;   CX - Number of sectors to read
 ;   BX - Buffer address to store read data
+;   CX - Number of sectors to read
 ;   [BOOT_DRIVE] - Drive number (usually set elsewhere)
 ;
 ; Returns:

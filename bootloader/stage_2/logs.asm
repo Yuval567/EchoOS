@@ -14,8 +14,3 @@ log_kernel_loaded:        db INFO_PREFIX, "Kernel successfully loaded into memor
 ; Error logs
 ; ---------------------------
 err_kernel_failure:       db ERROR_PREFIX, "Kernel failed or crashed.", ENDL, 0
-
-; ---------------------------
-; Debug logs
-; ---------------------------
-dbg_test:                 db DEBUG_PREFIX, "Debug checkpoint reached.", ENDL, 0

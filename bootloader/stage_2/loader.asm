@@ -1,6 +1,8 @@
 %include "common/macros.asm"
 %include "common/constants.asm"
 
+
+
 ; -----------------------------------------------------------------------------
 ; Main entry point for the stage 2 bootloader.
 ; Initializes stack and data segments, enables A20, loads the GDT, switches to
@@ -19,7 +21,7 @@
 ;   - Does not return on success (transfers control to kernel).
 ; -----------------------------------------------------------------------------
 [bits 16]
-[org LOADER_ADDRESS]
+[org LOADER_START_ADDRESS]
 start:
     ; BIOS sets boot drive in 'dl'; store for later use
     mov [BOOT_DRIVE], dl
@@ -90,6 +92,25 @@ protected_mode_entry:
     mov esp, STACK_START_ADDRESS
     mov ebp, esp
 
+    ; ; Enable PAE (bit 5 of CR4)
+    ; mov eax, cr4
+    ; or eax, (1 << 5)    ; set bit 5
+    ; mov cr4, eax
+
+    ; ; 2. Load PML4 physical address
+    ; mov eax, initial_pml4
+    ; mov cr3, eax
+
+    ; ; 3. Enable LME (Long Mode Enable) via MSR
+    ; mov ecx, 0xC0000080   ; IA32_EFER
+    ; rdmsr
+    ; or eax, (1 << 8)      ; set LME (bit 8)
+    ; wrmsr
+
+    ; ; 4. Enable paging
+    ; mov eax, cr0
+    ; or eax, (1 << 31)     ; set PG
+    ; mov cr0, eax
 
     ; print32 log_protected_mode_entry
 
@@ -99,6 +120,7 @@ protected_mode_entry:
     ; If we return here, hang the system
     stop
 
+
 %include "common/logs.asm"
 %include "common/utilities.asm"
 %include "common/disk.asm"
@@ -107,9 +129,7 @@ protected_mode_entry:
 %include "stage_2/protected_mode.asm"
 %include "stage_2/unreal_mode.asm"
 %include "stage_2/load_kernel.asm"
+%include "stage_2/pml4.asm"
 
 ; boot drive variable
 BOOT_DRIVE db 0
-
-; padding the loader to its full size
-times LOADER_SIZE_BYTES - ($-$$) db 0

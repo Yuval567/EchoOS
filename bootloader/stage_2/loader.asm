@@ -88,55 +88,25 @@ protected_mode_entry:
     mov gs, ax
     mov ss, ax
 
-    ; Set up stack for protected mode
-    mov esp, 0x001FF000   
-    mov ebp, esp
-
     cli
+    mov esp, 0x001FF000
 
-    ; Enable PAE (bit 5 of CR4)
+    ; 1) PAE + PSE
     mov eax, cr4
-    or eax, (1 << 5)    ; set bit 5
+    or  eax, (1<<5) | (1<<4)      ; CR4.PAE=1, CR4.PSE=1
     mov cr4, eax
 
-    ; 2. Load PML4 physical address
-    mov eax, initial_pml4
+    ; 2) CR3 = phys addr of PDPT (your “pml4” @ 0xB000)
+    mov eax, initial_pdptr      ; this is the PDPT in PAE mode
     mov cr3, eax
 
-    ; 3. Enable LME (Long Mode Enable) via MSR
-    mov ecx, 0xC0000080   ; IA32_EFER
-    rdmsr
-    or eax, (1 << 8)      ; set LME (bit 8)
-    wrmsr
 
-
-
-    ; 4. Enable paging
+    ; 3) CR0 (stable): PG|NE|WP, keep PE/ET set
     mov eax, cr0
-    
-    or  eax, (1 << 31) | (1 << 5) | (1 << 16)   ; PG | NE | WP
-
-    ; mov [0x9200], eax  ; for debugging
-
-    ; mov eax, cr3
-    ; mov [0x9204], eax
-
-    ; mov eax, cr4
-    ; mov [0x9208], eax
-
-    ; mov ecx, 0xC0000080
-    ; rdmsr
-    ; mov [0x920C], eax
-
-    
-    ; stop
-
+    or  eax, (1<<31) | (1<<5) | (1<<16)   ; PG | NE | WP
     mov cr0, eax
 
-    jmp short $+2
-    nop
-
-    jmp $
+    stop
 
 
 ;     lgdt [gdt64_desc]

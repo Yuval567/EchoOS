@@ -19,11 +19,12 @@ switch_to_unreal_mode:
     mov fs, ax
     mov gs, ax
 
-    ; now disable protected mode, but keep the segment registers
-    and al,0xFE                 ; clear PE bit in AL
-    mov  cr0, eax               ; disable protected mode, back to real mode
+    ; disable protected mode (clear PE) but keep cached limits
+    mov  eax, cr0
+    and  eax, 0xFFFFFFFE      ; clear bit 0 (PE)
+    mov  cr0, eax
+    jmp  short $+2            ; flush prefetch queue (belt-and-suspenders)
+
     sti                         ; re-enable interrupts
-    
     pop ds                      ; restore DS
-    
     call unreal_mode_entry

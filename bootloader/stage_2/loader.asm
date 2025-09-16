@@ -103,8 +103,6 @@ protected_mode_entry:
     mov eax, initial_pml4
     mov cr3, eax
 
-
-
     ; 3. Enable LME (Long Mode Enable) via MSR
     mov ecx, 0xC0000080   ; IA32_EFER
     rdmsr
@@ -115,9 +113,28 @@ protected_mode_entry:
 
     ; 4. Enable paging
     mov eax, cr0
-    or eax, (1 << 31)     ; set PG
+    
+    or  eax, (1 << 31) | (1 << 5) | (1 << 16)   ; PG | NE | WP
+
+    ; mov [0x9200], eax  ; for debugging
+
+    ; mov eax, cr3
+    ; mov [0x9204], eax
+
+    ; mov eax, cr4
+    ; mov [0x9208], eax
+
+    ; mov ecx, 0xC0000080
+    ; rdmsr
+    ; mov [0x920C], eax
+
+    
+    ; stop
+
     mov cr0, eax
 
+    jmp short $+2
+    nop
 
     jmp $
 

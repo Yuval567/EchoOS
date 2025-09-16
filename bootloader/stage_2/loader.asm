@@ -89,36 +89,82 @@ protected_mode_entry:
     mov ss, ax
 
     ; Set up stack for protected mode
-    mov esp, STACK_START_ADDRESS
+    mov esp, 0x001FF000   
     mov ebp, esp
 
-    ; ; Enable PAE (bit 5 of CR4)
-    ; mov eax, cr4
-    ; or eax, (1 << 5)    ; set bit 5
-    ; mov cr4, eax
+    cli
 
-    ; ; 2. Load PML4 physical address
-    ; mov eax, initial_pml4
-    ; mov cr3, eax
+    ; Enable PAE (bit 5 of CR4)
+    mov eax, cr4
+    or eax, (1 << 5)    ; set bit 5
+    mov cr4, eax
 
-    ; ; 3. Enable LME (Long Mode Enable) via MSR
-    ; mov ecx, 0xC0000080   ; IA32_EFER
-    ; rdmsr
-    ; or eax, (1 << 8)      ; set LME (bit 8)
-    ; wrmsr
+    ; 2. Load PML4 physical address
+    mov eax, initial_pml4
+    mov cr3, eax
 
-    ; ; 4. Enable paging
-    ; mov eax, cr0
-    ; or eax, (1 << 31)     ; set PG
-    ; mov cr0, eax
 
-    ; print32 log_protected_mode_entry
 
-    ; print32 log_calling_kernel
-    call KERNEL_START_ADDRESS
+    ; 3. Enable LME (Long Mode Enable) via MSR
+    mov ecx, 0xC0000080   ; IA32_EFER
+    rdmsr
+    or eax, (1 << 8)      ; set LME (bit 8)
+    wrmsr
 
-    ; If we return here, hang the system
-    stop
+
+
+    ; 4. Enable paging
+    mov eax, cr0
+    or eax, (1 << 31)     ; set PG
+    mov cr0, eax
+
+
+    jmp $
+
+
+;     lgdt [gdt64_desc]
+
+
+;     ; print32 log_protected_mode_entry
+
+;     ; print32 log_calling_kernel
+;     ; call KERNEL_START_ADDRESS
+
+;     ; If we return here, hang the system
+;     jmp 0x08:long_mode_entry
+
+; [bits 32]
+; long_mode_entry:
+;     ; Set up segment registers for protected mode
+;     mov ax, 0x10
+;     mov ds, ax
+;     mov es, ax
+;     mov fs, ax
+;     mov gs, ax
+;     mov ss, ax
+
+
+
+;     ; If we return here, hang the system
+;     stop
+
+; align 8
+; gdt64:
+;     dq 0x0000000000000000          ; null descriptor
+
+;     ; 64-bit code segment descriptor
+;     ; base=0, limit=0xFFFFF, G=1, L=1, P=1, type=0xA (exec/read)
+;     dq 0x00AF9A000000FFFF
+
+;     ; 64-bit data segment descriptor
+;     ; base=0, limit=0xFFFFF, G=1, P=1, type=0x2 (read/write)
+;     dq 0x00AF92000000FFFF
+
+; gdt64_end:
+
+; gdt64_desc:
+;     dw gdt64_end - gdt64 - 1   ; size of GDT
+;     dq gdt64                   ; base of GDT			# offset of GDT
 
 
 %include "common/logs.asm"
@@ -130,6 +176,8 @@ protected_mode_entry:
 %include "stage_2/unreal_mode.asm"
 %include "stage_2/load_kernel.asm"
 %include "stage_2/pml4.asm"
+
+
 
 ; boot drive variable
 BOOT_DRIVE db 0

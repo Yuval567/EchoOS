@@ -14,7 +14,7 @@ export BOOTLOADER_DIR=$(PWD)/bootloader
 
 # Internal Variables
 OS_FLOPPY=os_floppy.img
-EMULATOR=qemu-system-i386 -monitor stdio -fda 
+EMULATOR=qemu-system-x86_64 -monitor stdio -fda 
 MAKEFLAGS += --silent # Suppress Make logs
 
 .PHONY: all init bootloader kernel os_image run clear

@@ -53,4 +53,4 @@ enable_protected_mode:
 [bits 16]
 switch_to_protected_mode:
     call enable_protected_mode
-    jmp CODE_SEG:protected_mode_entry   ; far jump to clear prefetch queue and switch to protected mode
+    jmp CODE_SEG32:protected_mode_entry   ; far jump to clear prefetch queue and switch to protected mode

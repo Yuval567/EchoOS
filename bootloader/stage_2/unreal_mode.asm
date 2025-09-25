@@ -13,7 +13,7 @@ switch_to_unreal_mode:
     jmp $+3                     ; clear the instruction pre-fetch queue
 
     ; update segment registers to use the data segment selector in the GDT
-    mov ax, DATA_SEG
+    mov ax, DATA_SEG32
     mov ds, ax
     mov es, ax
     mov fs, ax

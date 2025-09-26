@@ -2,7 +2,6 @@
 %include "common/constants.asm"
 
 
-
 ; -----------------------------------------------------------------------------
 ; Main entry point for the stage 2 bootloader.
 ; Initializes stack and data segments, enables A20, loads the GDT, switches to
@@ -81,90 +80,60 @@ unreal_mode_entry:
 [bits 32]
 protected_mode_entry:
     ; Set up segment registers for protected mode
-    mov ax, DATA_SEG
+    mov ax, DATA_SEG32
     mov ds, ax
     mov es, ax
     mov fs, ax
     mov gs, ax
     mov ss, ax
 
+    ; Set up stack
+    mov esp, STACK_START_ADDRESS
+    mov ebp, esp
+
     cli
-    mov esp, 0x001FF000
 
-    ; 1) PAE + PSE
-    mov eax, cr4
-    or  eax, (1<<5) | (1<<4)      ; CR4.PAE=1, CR4.PSE=1
-    mov cr4, eax
-
-    ; 2) CR3 = phys addr of PDPT (your “pml4” @ 0xB000)
-    mov eax, initial_pdptr      ; this is the PDPT in PAE mode
-    mov cr3, eax
+    call switch_to_long_mode
 
 
-    ; 3) CR0 (stable): PG|NE|WP, keep PE/ET set
-    mov eax, cr0
-    or  eax, (1<<31) | (1<<5) | (1<<16)   ; PG | NE | WP
-    mov cr0, eax
+; -----------------------------------------------------------------------------
+; Entry point after switching to long mode (64-bit).
+; Sets up segment registers for long mode and transfers control to the kernel.
+;
+; Steps:
+;   1. Sets up all segment registers for long mode.
+;   2. Calls the kernel entry point.
+;   3. Halts if control returns.
+;
+; Parameters: None
+; Returns: None (does not return; transfers control to kernel)
+; -----------------------------------------------------------------------------
+[bits 64]
+long_mode_entry:
+    ; Set up segment registers for long mode
+    mov ax, DATA_SEG64
+    mov ds, ax
+    mov es, ax
+    mov ss, ax
+    mov fs, ax
+    mov gs, ax
+
+    ; Call the kernel entry point
+    call KERNEL_START_ADDRESS
 
     stop
-
-
-;     lgdt [gdt64_desc]
-
-
-;     ; print32 log_protected_mode_entry
-
-;     ; print32 log_calling_kernel
-;     ; call KERNEL_START_ADDRESS
-
-;     ; If we return here, hang the system
-;     jmp 0x08:long_mode_entry
-
-; [bits 32]
-; long_mode_entry:
-;     ; Set up segment registers for protected mode
-;     mov ax, 0x10
-;     mov ds, ax
-;     mov es, ax
-;     mov fs, ax
-;     mov gs, ax
-;     mov ss, ax
-
-
-
-;     ; If we return here, hang the system
-;     stop
-
-; align 8
-; gdt64:
-;     dq 0x0000000000000000          ; null descriptor
-
-;     ; 64-bit code segment descriptor
-;     ; base=0, limit=0xFFFFF, G=1, L=1, P=1, type=0xA (exec/read)
-;     dq 0x00AF9A000000FFFF
-
-;     ; 64-bit data segment descriptor
-;     ; base=0, limit=0xFFFFF, G=1, P=1, type=0x2 (read/write)
-;     dq 0x00AF92000000FFFF
-
-; gdt64_end:
-
-; gdt64_desc:
-;     dw gdt64_end - gdt64 - 1   ; size of GDT
-;     dq gdt64                   ; base of GDT			# offset of GDT
 
 
 %include "common/logs.asm"
 %include "common/utilities.asm"
 %include "common/disk.asm"
 %include "stage_2/logs.asm"
-%include "stage_2/32bit_gdt.asm"
+%include "stage_2/gdt.asm"
+%include "stage_2/long_mode.asm"
 %include "stage_2/protected_mode.asm"
 %include "stage_2/unreal_mode.asm"
 %include "stage_2/load_kernel.asm"
 %include "stage_2/pml4.asm"
-
-
 
 ; boot drive variable
 BOOT_DRIVE db 0

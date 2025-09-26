@@ -19,7 +19,7 @@ load_kernel_to_memory:
         
         push cx
         
-        mov cx, SECTOR_SIZE_BYTES
+        mov cx, DISK_SECTOR_SIZE_BYTES
         mov si, TEMP_SECTOR_BUFFER_ADDRESS
         
         call copy_buffer

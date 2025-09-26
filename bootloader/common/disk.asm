@@ -8,7 +8,7 @@
 ;   [BOOT_DRIVE] - Drive number (usually set elsewhere)
 ;
 ; Returns:
-;   Data read from disk is stored at [BX], incremented by SECTOR_SIZE_BYTES per sector.
+;   Data read from disk is stored at [BX], incremented by DISK_SECTOR_SIZE_BYTES per sector.
 ;
 ; Errors:
 ;   If disk read fails, prints err_disk_load and halts.
@@ -37,7 +37,7 @@ load_from_disk:
 
         inc ax                      ; Increment LBA
         dec cx                      ; Decrement sector count
-        add bx, SECTOR_SIZE_BYTES   ; Move buffer pointer to next sector
+        add bx, DISK_SECTOR_SIZE_BYTES   ; Move buffer pointer to next sector
 
         jmp .next_sector
  
@@ -64,23 +64,23 @@ load_from_disk:
 ;   DH - Head
 ;
 ; Uses:
-;   HEADS - Number of heads per cylinder (defined elsewhere)
-;   SECTORS_PER_TRACK - Number of sectors per track (defined elsewhere)
+;   DISK_HEADS - Number of DISK_HEADS per cylinder (defined elsewhere)
+;   DISK_SECTORS_PER_TRACK - Number of sectors per track (defined elsewhere)
 ; -----------------------------------------------------------------------------
 [bits 16]
 convert_lba_to_chs:
     push ax
     push bx
 
-    mov     bx, HEADS*SECTORS_PER_TRACK
+    mov     bx, DISK_HEADS*DISK_SECTORS_PER_TRACK
     xor     dx, dx
-    div     bx                     ; AX / SECTORS_PER_TRACK -> AX = Cylinder, DX = remainder
+    div     bx                     ; AX / DISK_SECTORS_PER_TRACK -> AX = Cylinder, DX = remainder
     mov     ch, al                 ; CH = cylinder
 
-    mov     bx, SECTORS_PER_TRACK
+    mov     bx, DISK_SECTORS_PER_TRACK
     mov     ax, dx
     xor     dx, dx
-    div     bx                     ; AX / SECTORS_PER_TRACK -> AX=head, DX=sectorIndex
+    div     bx                     ; AX / DISK_SECTORS_PER_TRACK -> AX=head, DX=sectorIndex
 
     mov     dh, al                 ; DH = head
     inc     dl                     ; DL = sectorIndex+1

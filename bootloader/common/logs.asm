@@ -13,4 +13,8 @@ log_disk_loaded:          db INFO_PREFIX, "Disk sectors read into memory.", ENDL
 ; Error logs
 ; ---------------------------
 err_disk_load:            db ERROR_PREFIX, "Disk read error: unable to load requested sectors.", ENDL, 0
-err_sector_count:         db ERROR_PREFIX, "Invalid or insufficient number of sectors specified.", ENDL, 0
+
+; ---------------------------
+; Debug logs
+; ---------------------------
+dbg_test:                 db DEBUG_PREFIX, "Debug checkpoint reached.", ENDL, 0

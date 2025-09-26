@@ -1,6 +1,6 @@
 # Global Variables
 export ASM=nasm
-export GCC=i686-elf-gcc
+export GCC=x86_64-elf-gcc
 export LD=ld
 
 export KERNEL_BIN=kernel.bin
@@ -14,7 +14,7 @@ export BOOTLOADER_DIR=$(PWD)/bootloader
 
 # Internal Variables
 OS_FLOPPY=os_floppy.img
-EMULATOR=qemu-system-i386 -monitor stdio -fda 
+EMULATOR=qemu-system-x86_64 -monitor stdio -fda 
 MAKEFLAGS += --silent # Suppress Make logs
 
 .PHONY: all init bootloader kernel os_image run clear

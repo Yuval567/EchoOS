@@ -1,47 +1,92 @@
-; -------------------------------------------------------------
-; Reads a specified number of sectors from the boot drive 
-; into memory using BIOS interrupt 0x13.
-;
+; -----------------------------------------------------------------------------
+; Reads sectors from disk using BIOS interrupt 0x13.
+; 
 ; Parameters:
-;   - es:bx -> Destination memory address
-;   - dh -> Number of sectors to read
-;   - cl -> Starting sector number
-;   - dl -> Boot drive number
+;   AX - Starting LBA (Logical Block Address)
+;   BX - Buffer address to store read data
+;   CX - Number of sectors to read
+;   [BOOT_DRIVE] - Drive number (usually set elsewhere)
 ;
 ; Returns:
-;   - On success: Returns with no error.
-;   - On failure: Prints an error message and halts the system.
-; -------------------------------------------------------------
+;   Data read from disk is stored at [BX], incremented by SECTOR_SIZE_BYTES per sector.
+;
+; Errors:
+;   If disk read fails, prints err_disk_load and halts.
+; -----------------------------------------------------------------------------
 [bits 16]
 load_from_disk:
     pusha
 
-    push dx             ; save dx as we use dh and dl
+    .next_sector:
+        cmp cx, 0
+        je .done
 
-    mov ah, 0x02        ; read mode
-    mov al, dh          ; read dh number of sectors
-    mov ch, 0x00        ; cylinder 0
-    mov dh, 0x00        ; head 0
+        push ax                     ; save LBA
+        push cx                     ; save sector count
 
-    int 0x13            ; BIOS interrupt
-    jc load_disk_error  ; check carry bit for read error
+        call convert_lba_to_chs     ; input AX, output: CH=cylinder, CL=sector, DH=head
+        
+        mov dl, [BOOT_DRIVE]
+        mov al, 1                   ; read 1 sector at a time
+        mov ah, 0x02                ; read mode for int 0x13
+        int 0x13
+        jc .disk_error              ; if carry flag set → error
 
-    pop dx              ; restore dx
+        pop cx                      ; restore sector count
+        pop ax                      ; restore LBA
 
-    ; BIOS sets 'al' to the number of sectors actually read
-    cmp al, dh
-    ; Compare it to 'dh' and error out if they are not equal
-    jne insufficient_sectors
+        inc ax                      ; Increment LBA
+        dec cx                      ; Decrement sector count
+        add bx, SECTOR_SIZE_BYTES   ; Move buffer pointer to next sector
 
-    popa
-    ret
-
-    load_disk_error:
+        jmp .next_sector
+ 
+    .disk_error:
         popa
         print16 err_disk_load 
         stop
 
-    insufficient_sectors:
+    .done:
         popa
-        print16 err_sector_count 
-        stop
+        ret
+
+
+
+; -----------------------------------------------------------------------------
+; Converts a Logical Block Address (LBA) to Cylinder-Head-Sector (CHS) values.
+;
+; Parameters:
+;   AX - LBA to convert
+;
+; Returns:
+;   CH - Cylinder
+;   CL - Sector (starts at 1)
+;   DH - Head
+;
+; Uses:
+;   HEADS - Number of heads per cylinder (defined elsewhere)
+;   SECTORS_PER_TRACK - Number of sectors per track (defined elsewhere)
+; -----------------------------------------------------------------------------
+[bits 16]
+convert_lba_to_chs:
+    push ax
+    push bx
+
+    mov     bx, HEADS*SECTORS_PER_TRACK
+    xor     dx, dx
+    div     bx                     ; AX / SECTORS_PER_TRACK -> AX = Cylinder, DX = remainder
+    mov     ch, al                 ; CH = cylinder
+
+    mov     bx, SECTORS_PER_TRACK
+    mov     ax, dx
+    xor     dx, dx
+    div     bx                     ; AX / SECTORS_PER_TRACK -> AX=head, DX=sectorIndex
+
+    mov     dh, al                 ; DH = head
+    inc     dl                     ; DL = sectorIndex+1
+    mov     cl, dl                 ; CL = sector
+    
+    pop     bx
+    pop     ax
+
+    ret

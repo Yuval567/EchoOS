@@ -12,21 +12,23 @@ load_kernel_to_memory:
     mov edi, KERNEL_START_ADDRESS ; Initial destination address (kernel address)
     mov cx, KERNEL_NUM_SECTORS
   
+
+
     .load_chunks_loop:
         call load_kernel_sector
         
         push cx
         
         mov cx, SECTOR_SIZE_BYTES
-        mov si, BUFFER_ADDRESS
+        mov si, TEMP_SECTOR_BUFFER_ADDRESS
         
         call copy_buffer
 
         pop cx
 
-        mov ax, [START_SECTOR]
+        mov ax, [CURRENT_LBA]
         inc ax
-        mov [START_SECTOR], ax
+        mov [CURRENT_LBA], ax
 
         dec cx
         jnz .load_chunks_loop
@@ -34,7 +36,7 @@ load_kernel_to_memory:
     ret
 
 ; ---------------------------------------------------------------------------
-; Loads one kernel sector from disk into BUFFER_ADDRESS using BIOS routines.
+; Loads one kernel sector from disk into TEMP_SECTOR_BUFFER_ADDRESS using BIOS routines.
 ; Temporarily resets DS and ES for BIOS compatibility.
 ; Parameters: None
 ; Returns: None
@@ -51,10 +53,10 @@ load_kernel_sector:
     mov ds, ax
     mov es, ax
 
-    mov bx, BUFFER_ADDRESS
-    mov cl, [START_SECTOR]
-    mov dh, 0x01
-    mov dl, [BOOT_DRIVE]
+    mov ax, [CURRENT_LBA]
+    mov bx, TEMP_SECTOR_BUFFER_ADDRESS
+    mov cx, 0x01            ; Read 1 sector
+    
     call load_from_disk
     print16 log_disk_loaded
 
@@ -91,4 +93,4 @@ copy_buffer:
 
 ; Variable holding the current sector number to load.
 ; Initialized to the first kernel sector after the bootloader.
-START_SECTOR db (1 + LOADER_NUM_SECTORS) + 1
+CURRENT_LBA dw KERNEL_LBA

@@ -1,6 +1,7 @@
 %include "common/macros.asm"
 %include "common/constants.asm"
 
+
 ; -----------------------------------------------------------------------------
 ; Main entry point for the stage 2 bootloader.
 ; Initializes stack and data segments, enables A20, loads the GDT, switches to
@@ -19,7 +20,7 @@
 ;   - Does not return on success (transfers control to kernel).
 ; -----------------------------------------------------------------------------
 [bits 16]
-[org LOADER_ADDRESS]
+[org LOADER_START_ADDRESS]
 start:
     ; BIOS sets boot drive in 'dl'; store for later use
     mov [BOOT_DRIVE], dl
@@ -79,37 +80,60 @@ unreal_mode_entry:
 [bits 32]
 protected_mode_entry:
     ; Set up segment registers for protected mode
-    mov ax, DATA_SEG
+    mov ax, DATA_SEG32
     mov ds, ax
     mov es, ax
     mov fs, ax
     mov gs, ax
     mov ss, ax
 
-    ; Set up stack for protected mode
+    ; Set up stack
     mov esp, STACK_START_ADDRESS
     mov ebp, esp
 
+    cli
 
-    ; print32 log_protected_mode_entry
+    call switch_to_long_mode
 
-    ; print32 log_calling_kernel
+
+; -----------------------------------------------------------------------------
+; Entry point after switching to long mode (64-bit).
+; Sets up segment registers for long mode and transfers control to the kernel.
+;
+; Steps:
+;   1. Sets up all segment registers for long mode.
+;   2. Calls the kernel entry point.
+;   3. Halts if control returns.
+;
+; Parameters: None
+; Returns: None (does not return; transfers control to kernel)
+; -----------------------------------------------------------------------------
+[bits 64]
+long_mode_entry:
+    ; Set up segment registers for long mode
+    mov ax, DATA_SEG64
+    mov ds, ax
+    mov es, ax
+    mov ss, ax
+    mov fs, ax
+    mov gs, ax
+
+    ; Call the kernel entry point
     call KERNEL_START_ADDRESS
 
-    ; If we return here, hang the system
     stop
+
 
 %include "common/logs.asm"
 %include "common/utilities.asm"
 %include "common/disk.asm"
 %include "stage_2/logs.asm"
-%include "stage_2/32bit_gdt.asm"
+%include "stage_2/gdt.asm"
+%include "stage_2/long_mode.asm"
 %include "stage_2/protected_mode.asm"
 %include "stage_2/unreal_mode.asm"
 %include "stage_2/load_kernel.asm"
+%include "stage_2/pml4.asm"
 
 ; boot drive variable
 BOOT_DRIVE db 0
-
-; padding the loader to its full size
-times LOADER_SIZE_BYTES - ($-$$) db 0

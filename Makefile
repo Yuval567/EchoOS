@@ -1,6 +1,6 @@
 # Global Variables
 export ASM=nasm
-export GCC=i686-elf-gcc
+export GCC=x86_64-elf-gcc
 export LD=ld
 
 export KERNEL_BIN=kernel.bin

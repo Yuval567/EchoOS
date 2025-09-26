@@ -9,7 +9,7 @@
 ; -------------------------------------------------------------------------
 [bits 16]
 load_kernel_to_memory:
-    mov edi, KERNEL_START_ADDRESS ; Initial destination address (kernel address)
+    mov edi, KERNEL_LOAD_ADDRESS
     mov cx, KERNEL_NUM_SECTORS
   
 

@@ -88,7 +88,7 @@ protected_mode_entry:
     mov ss, ax
 
     ; Set up stack
-    mov esp, STACK_START_ADDRESS
+    mov esp, KERNEL_STACK_TOP_ADDRESS
     mov ebp, esp
 
     cli
@@ -119,7 +119,7 @@ long_mode_entry:
     mov gs, ax
 
     ; Call the kernel entry point
-    call KERNEL_START_ADDRESS
+    call KERNEL_LOAD_ADDRESS
 
     stop
 

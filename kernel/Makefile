@@ -14,4 +14,4 @@ $(OBJ_DIR)/kernel.o: $(KERNEL_DIR)/kernel.c $(OBJ_DIR)/vga.o $(OBJ_DIR)/ports.o
 	$(GCC) $(CFLAGS) -c $< -o $@
 
 $(KERNEL_BIN): $(OBJFILES)
-	$(LD) -m elf_x86_64 -o $(BUILD_DIR)/$@ -Ttext 0x100400 $^ --oformat binary --entry $(ENTRYPOINT)
+	$(LD) -m elf_x86_64 -o $(BUILD_DIR)/$@ -Ttext $(KERNEL_LOAD_ADDRESS) $^ --oformat binary --entry $(ENTRYPOINT)

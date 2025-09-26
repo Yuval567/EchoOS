@@ -12,6 +12,18 @@ export OBJ_DIR=$(BUILD_DIR)/obj
 export KERNEL_DIR=$(PWD)/kernel
 export BOOTLOADER_DIR=$(PWD)/bootloader
 
+# Floppy Disk Constants
+export DISK_HEADS=2
+export DISK_SECTORS_PER_TRACK=18
+export DISK_SECTOR_SIZE_BYTES=512
+
+# Memory and Size Constants
+export LOADER_NUM_SECTORS=35
+export KERNEL_NUM_SECTORS=15
+export KERNEL_LOAD_ADDRESS=0x100400
+export KERNEL_STACK_TOP_ADDRESS=0x100400
+
+
 # Internal Variables
 OS_FLOPPY=os_floppy.img
 EMULATOR=qemu-system-x86_64 -monitor stdio -fda 

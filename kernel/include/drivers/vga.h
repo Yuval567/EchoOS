@@ -1,9 +1,13 @@
 #pragma once
 
-#define VIDEO_ADDRESS 0xb8000
-#define MAX_ROWS 25
-#define MAX_COLS 80
-#define WHITE_ON_BLACK 0x0f
+#include <stdint.h>
+#include <stddef.h>
 
-void print_string(char* string);
+#define VGA_WIDTH 80
+#define VGA_HEIGHT 25
+#define VGA_COLOR 0x0f
+#define VIDEO_ADDRESS 0xb8000
+
+void put_char(char c, uint8_t color);
+void print(char* string);
 void clear_screen();

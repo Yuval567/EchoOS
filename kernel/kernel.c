@@ -3,6 +3,11 @@
 void main() 
 {
     clear_screen();
-    char message[] = "Hello Kernel!";
-    print_string(message);
+
+    for (size_t i = 0; i < 25; i++)
+    {
+        print("Hello Kernel!\n");
+    }
+    
+    print("Kernel Initialized.\n");
 }

@@ -1,13 +1,19 @@
 #include "drivers/vga.h"
+#include "drivers/idt.h"
+#include "drivers/keyboard.h"
 
 void main() 
 {
     clear_screen();
 
-    for (size_t i = 0; i < 25; i++)
-    {
-        print("Hello Kernel!\n");
-    }
-    
     print("Kernel Initialized.\n");
+
+    initialize_idt();
+
+    asm volatile ("sti"); // enable interrupts
+
+    while (1) 
+    {
+        asm volatile ("hlt");
+    }
 }

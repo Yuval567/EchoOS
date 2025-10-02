@@ -10,6 +10,19 @@ static inline uint16_t vga_entry(char ch, uint8_t color)
     return (uint16_t) ch | ((uint16_t) color << 8);
 }
 
+void delete_char()
+{
+    if (cursor_col == 0) 
+    {
+        return;
+    } 
+    
+    cursor_col--;
+
+    const size_t index = cursor_row * VGA_WIDTH + cursor_col;
+    vga_buffer[index] = vga_entry(' ', VGA_COLOR);
+}
+
 void put_char(char ch, uint8_t color)
 {
     if (ch == '\n') 

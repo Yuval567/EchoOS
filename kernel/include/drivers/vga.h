@@ -9,5 +9,7 @@
 #define VIDEO_ADDRESS 0xb8000
 
 void put_char(char c, uint8_t color);
+void delete_char();
+
 void print(char* string);
 void clear_screen();

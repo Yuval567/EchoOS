@@ -2,6 +2,8 @@
 #include "drivers/io_ports.h"
 #include "drivers/keyboard.h"
 
+extern void isr_stub();
+
 struct idt_entry idt_vector[IDT_SIZE];
 
 void set_idt_entry(size_t n, uint64_t handler) 

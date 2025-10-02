@@ -24,7 +24,6 @@ struct __attribute__((packed)) idt_ptr
     uint64_t base;
 };
 
-extern void isr_stub();
 
 void set_idt_entry(size_t n, uint64_t handler);
 void initialize_idt();

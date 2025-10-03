@@ -9,7 +9,8 @@
 #define VIDEO_ADDRESS 0xb8000
 
 void put_char(char c, uint8_t color);
-void delete_char();
+void delete_char(size_t min_col);
 
-void print(char* string);
+void kprint(char* string);
 void clear_screen();
+void get_current_row_string(char* buffer);

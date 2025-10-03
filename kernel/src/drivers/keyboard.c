@@ -1,4 +1,5 @@
 #include "drivers/keyboard.h"
+#include "terminal/terminal_logic.h"
 
 static const char keymap[128] = {
     0, 27, '1','2','3','4','5','6','7','8','9','0','-','=','\b',
@@ -16,18 +17,24 @@ void keyboard_handler()
     {
         char ch = keymap[scancode];
     
-        if (ch == 0 || ch == '\t')
+        switch (ch)
         {
-            return;
-        }
+            case 0:
+            case '\t':
+                return;
 
-        if (ch == '\b')
-        {
-            delete_char();
-        }
-        else 
-        {
-            put_char(ch, VGA_COLOR);
+            case '\b':
+                terminal_backspace();
+                break;
+
+            case '\n':
+                terminal_print_echo();
+                terminal_new_line();
+                break;
+
+            default:
+                put_char(ch, VGA_COLOR);
+                break;
         }
     }
 }

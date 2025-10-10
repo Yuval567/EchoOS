@@ -2,8 +2,7 @@
 
 static size_t cursor_row = 0;
 static size_t cursor_col = 0;
-static volatile uint16_t* const vga_buffer = (uint16_t*) VIDEO_ADDRESS;
-
+static volatile uint16_t* const vga_buffer = (uint16_t*) VGA_VIDEO_ADDRESS;
 
 static inline uint16_t vga_entry(char ch, uint8_t color) 
 {
@@ -63,7 +62,7 @@ void clear_screen()
     cursor_col = 0;
 }
 
-void print(char* string)
+void kprint(char* string)
 {
     size_t i = 0;
     while (string[i] != '\0') 
@@ -71,4 +70,31 @@ void print(char* string)
         put_char(string[i], VGA_COLOR);
         i++;
     }
+}
+
+void get_current_row_string(char* buffer)
+{
+    for (size_t x = 0; x < VGA_WIDTH; x++) 
+    {
+        const size_t index = cursor_row * VGA_WIDTH + x;
+        
+        // Extract character from VGA entry (lower byte)
+        char ch = (char)(vga_buffer[index] & 0x00FF);
+        buffer[x] = ch;
+    }
+    
+    buffer[VGA_WIDTH] = '\0';
+}
+
+void delete_char(size_t min_col)
+{
+    if (cursor_col == min_col) 
+    {
+        return;
+    } 
+    
+    cursor_col--;
+
+    const size_t index = cursor_row * VGA_WIDTH + cursor_col;
+    vga_buffer[index] = vga_entry(' ', VGA_COLOR);
 }

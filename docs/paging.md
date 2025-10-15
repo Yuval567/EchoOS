@@ -29,16 +29,16 @@ Each entry in these tables contains:
 - The **physical base address** of the next-level table (or page frame)
 - Control flags (Present, Writable, User/Supervisor, Page Size, etc.)
 
-![pml4-hierarchy](../media/pml4.png)
+![pml4-hierarchy](./media/pml4.png)
 4-Level Paging diagram
 
-![virtual-address-translation](../media/virtual_address.png)
+![virtual-address-translation](./media/virtual_address.png)
 Virtual address translation
 
 
 When the **PS (Page Size)** flag is set in a Page Directory entry, the CPU treats it as a **2 MiB huge page**, bypassing the lowest Page Table level. EchoOS uses this mechanism for its early mappings.
 
-![2MiB-paging-tables](../media/2mib_paging.png)
+![2MiB-paging-tables](./media/2mib_paging.png)
 
 
 ## Paging Configuration in EchoOS

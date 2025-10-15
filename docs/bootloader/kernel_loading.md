@@ -11,7 +11,7 @@ To overcome this limitation, the loader takes the following approach while runni
 
 This approach keeps compatibility with BIOS and still allows EchoOS to load the kernel exactly where it needs to be.
 
-## Flow
+## Loading Sequence
 
 1. After enabling the A20 line and setting up the GDT, the loader switches into Unreal Mode to gain access to the full 32-bit address space.
 

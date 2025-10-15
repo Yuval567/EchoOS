@@ -8,7 +8,7 @@ Protected Mode unlocks 32-bit addressing, hardware level memory protection, and 
 Transitioning to protected mode is a carefully ordered sequence, one mistake here causes an instant triple fault.  
 The steps below reflect how **EchoOS** performs this transition.
 
-### Flow
+### Switch Sequence
 1. **Load the GDT**  
    The loader executes `LGDT [gdt_descriptor]` to install the global descriptor table prepared earlier.  
    This defines the 32-bit code and data segments that will be used once the PE bit is set.

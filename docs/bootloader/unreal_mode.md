@@ -26,7 +26,7 @@ This means the 32‑bit base and limit values remain active, even though the pro
 Effectively, the CPU behaves as if it’s still using 32‑bit descriptors for data access, but the instruction set and interrupts remain in real mode.
 
 
-## Flow
+## Switch Sequence
 After enabling the A20 gate and loading the GDT, EchoOS performs the following sequence:
 
 1. **Enable Protected Mode temporarily** by setting the PE bit in `CR0`.  

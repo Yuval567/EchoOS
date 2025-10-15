@@ -23,7 +23,7 @@ It features a fully custom **multi-stage bootloader** that transitions from 16-b
 - [Stage One Bootloader](./docs/stage_one.md)
 - [Stage Two Bootloader](./docs/stage_two.md)
 - [A20 Gate](./docs/A20_gate.md)
-- [Disk](./docs/disk.md)  
+- [Disk Operations](./docs/disk.md)  
 - [Global Descriptor Table (GDT)](./docs/gdt.md)  
 - [Unreal Mode](./docs/unreal_mode.md)  
 - [Loading Kernel Into Memory](./docs/kernel_loading.md)
@@ -36,7 +36,7 @@ It features a fully custom **multi-stage bootloader** that transitions from 16-b
 
 
 ## Features
-- Custom MBR bootloader — no GRUB dependency  
+- Custom MBR bootloader - no GRUB dependency  
 - A20 gate control
 - Flat memory model via custom GDT  
 - Transition through Unreal, Protected, and Long modes  

@@ -1,5 +1,5 @@
 ENTRYPOINT=main
-CFLAGS=-m64 -ffreestanding -fno-pic -mcmodel=kernel -mno-red-zone -std=gnu99 -O2 -Wall -Wextra -I$(KERNEL_DIR)/include
+CFLAGS=-m64 -ffreestanding -fno-pic -mcmodel=kernel -mno-red-zone -std=gnu99 -O2 -Wall -Wextra -mno-sse -mno-sse2 -mno-mmx -mno-avx -I$(KERNEL_DIR)/include
 OBJFILES=$(OBJ_DIR)/vga.o $(OBJ_DIR)/io_ports.o $(OBJ_DIR)/idt.o $(OBJ_DIR)/keyboard.o \
 	$(OBJ_DIR)/isr_keyboard.o $(OBJ_DIR)/isr_stub.o $(OBJ_DIR)/terminal_logic.o 
 
